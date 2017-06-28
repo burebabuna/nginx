@@ -13,6 +13,8 @@ def marathon_url = "env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : en
 def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
 
+def env = System.getenv()
+
 
 node ( jenkins_slave ) {
 
@@ -22,8 +24,7 @@ node ( jenkins_slave ) {
 
 	stage ('Docker') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			sh "git rev-parse --short HEAD > .git/commit_id"
-			COMMIT_ID = readFile('.git/commit_id').trim()
+			def COMMIT_ID = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
 
 		stage "Docker-Build"
 			docker.build(docker_image)

@@ -13,8 +13,6 @@ def marathon_url = "env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : en
 def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
 
-def env = System.getenv()
-
 
 node ( jenkins_slave ) {
 

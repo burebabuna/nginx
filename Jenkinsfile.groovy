@@ -30,7 +30,7 @@ node ( jenkins_slave ) {
 		}
 
 	stage ('Marathon-Deployment') {
-		sh " chmod +x ./marathon.sh"
+		sh "chmod +x ./marathon.sh"
 		sh "./marathon.sh -i=$COMMIT_ID"
 		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json"
 	}

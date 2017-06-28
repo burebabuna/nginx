@@ -20,21 +20,14 @@ node ( jenkins_slave ) {
 		git url: scm_url, branch: scm_branch, credentialsId: scm_credentials
 	}
 
-	stage ('Tag-Creation') {
+	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-
+			def app = docker.build ("${docker_image}")
 			sh "git rev-parse --short HEAD > .git/commit-id"
             COMMIT_ID = readFile('.git/commit-id').trim()
-
-			stage ('Docker-Build') {
-				def app = docker.build "$docker_image"
-			}
-		
-			stage ('Docker-Push') {	
-				app.push "$COMMIT_ID"
+			app.push "$COMMIT_ID"
 			}
 		}
-	}
 
 	stage ('Marathon-Deployment') {
 		sh "./marathon.sh -i=$COMMIT_ID"

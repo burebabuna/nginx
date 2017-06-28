@@ -2,10 +2,8 @@
 for i in "$@"
 do
 case $i in 
-    -i=*|--tag=*)
-  TAG="${i#*=}"
-  ;;
-    *)
+    -i=*|--image=*)
+  IMAGE="${i#*=}"
   ;;
 esac
 done
@@ -15,7 +13,7 @@ cat > marathon.json <<EOF
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-registry.bintray.io/nginx-version-test:${TAG}",
+      "image": "fractal-docker-registry.bintray.io/nginx-version-test:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}

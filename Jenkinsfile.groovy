@@ -27,8 +27,7 @@ node ( jenkins_slave ) {
             COMMIT_ID = readFile('.git/commit-id').trim()
 
 			stage ('Docker-Build') {
-				def app = $docker_image 
-				docker.build(app)
+				def app = docker.build "$docker_image"
 			}
 		
 			stage ('Docker-Push') {	

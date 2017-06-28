@@ -1,8 +1,8 @@
 #!/usr/bin/env groovy
 def scm_url = "git@bitbucket.org:fractalindustries/nginx-version-test"
 def scm_branch = "master"
-def docker_registry_url = "https://fractal-docker-fos-prod-bintray.io"
-def docker_image = "fractal-docker-fos-prod-bintray.io/nginx-version-test"
+def docker_registry_url = "https://fractal-docker-fos-prod.bintray.io"
+def docker_image = "fractal-docker-fos-prod.bintray.io/nginx-version-test"
 
 def scm_credentials = "dcos-jenkins"
 def docker_registry_credentials = "dcos-jenkins-bintray"

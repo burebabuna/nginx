@@ -22,13 +22,17 @@ node ( jenkins_slave ) {
 
 	stage ('Docker') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			def COMMIT_ID = sh(script: "git rev-parse HEAD", returnStdout: true).trim()
 
-		stage "Docker-Build"
-			docker.build(docker_image)
-	
-		stage "Docker-Push"		
-			app.push "$COMMIT_ID"
+			sh "git rev-parse --short HEAD > .git/commit-id"
+            COMMIT_ID = readFile('.git/commit-id').trim()
+
+			stage "Docker-Build" {
+				docker.build(docker_image)
+			}
+		
+			stage "Docker-Push" {	
+				app.push "$COMMIT_ID"
+			}
 		}
 	}
 

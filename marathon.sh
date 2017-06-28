@@ -1,16 +1,15 @@
 #!/bin/bash
 for i in "$@"
 do
-  case $i in 
+case $i in 
     -i=*|--tag=*)
-        TAG="${i#*=}"
-        ;;
-        *)
-        ;;
+  TAG="${i#*=}"
+  ;;
+    *)
+  ;;
 esac
 done
-
-cat> marathon.json <<EOF
+cat > marathon.json <<EOF
 {
   "id": "nginx-version-test",
   "container": {

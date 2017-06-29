@@ -23,7 +23,7 @@ node ( 'graphstack' ) {
 			sh "basename `git rev-parse --show-toplevel` > .git/image"
             COMMIT_ID = readFile('.git/commit').trim()
             SERVICE_NAME = readFile('.git/image')
-			def docker_image = "fractal-docker-registry.bintray.io/${SERVICE_NAME}"
+			docker_image = "fractal-docker-registry.bintray.io/${SERVICE_NAME}"
 	}
 
 	stage ('Docker Build and Push') {

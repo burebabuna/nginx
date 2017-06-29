@@ -3,17 +3,17 @@
 for i in "$@"
 do
 case $i in
-  -i=*|--image=*)
-  IMAGE="${i#*=}"
-  ;;
-  -s=*|--service_name=*)
-  SERVICE_NAME="${i#*=}"
-  ;;
-  -g=*|--group=*)
-  GROUP="${i#*=}"
-  ;;
-  *)
-  ;;
+    -i=*|--image=*)
+    IMAGE="${i#*=}"
+    ;;
+    -s=*|--service_name=*)
+    SERVICE_NAME="${i#*=}"
+    ;;
+    -g=*|--group=*)
+    GROUP="${i#*=}"
+    ;;
+    *)
+    ;;
 esac
 done
 
@@ -43,4 +43,8 @@ cat > marathon.json <<EOF
 }
 
 EOF
+cat marathon.json
+PWD
+ls -ltra
+
 echo "This image is tagged as ${SERVICE_NAME}:${IMAGE}"

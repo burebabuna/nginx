@@ -8,8 +8,7 @@ def scm_credentials = "dcos-jenkins"
 def docker_registry_credentials = "dcos-jenkins-bintray"
 
 def jenkins_slave = "mesos"
-def marathon_url = "env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : env.MARATHON_URL"
-
+def marathon_url = env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : env.MARATHON_URL
 def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
 

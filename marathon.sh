@@ -3,16 +3,16 @@
 for i in "$@"
 do
 case $i in
-    -i=*|--image=*)
+  -i=*|--image=*)
   IMAGE="${i#*=}"
   ;;
   -s=*|--service_name=*)
   SERVICE_NAME="${i#*=}"
   ;;
-    -g=*|--group=*)
+  -g=*|--group=*)
   GROUP="${i#*=}"
   ;;
-    *)
+  *)
   ;;
 esac
 done
@@ -41,5 +41,6 @@ cat > marathon.json <<EOF
     "HAPROXY_0_VHOST":"${SERVICE_NAME}.fos"
   }
 }
+
 EOF
 echo "This image is tagged as ${SERVICE_NAME}:${IMAGE}"

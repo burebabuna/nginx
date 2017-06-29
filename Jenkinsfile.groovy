@@ -1,8 +1,7 @@
 #!/usr/bin/env groovy
 def scm_url = "git@bitbucket.org:fractalindustries/nginx-version-test"
 def scm_branch = "master"
-def docker_registry_url = "https://fractal-docker-fos-prod.bintray.io"
-def docker_image = "fractal-docker-fos-prod.bintray.io/nginx-version-test"
+def docker_registry_url = "https://fractal-docker-registry.bintray.io"
 
 def scm_credentials = "dcos-jenkins"
 def docker_registry_credentials = "dcos-jenkins-bintray"
@@ -20,15 +19,16 @@ node ( 'graphstack' ) {
 
 	stage ('Checkout') {
 		git url: scm_url, branch: scm_branch, credentialsId: scm_credentials
+			sh "git rev-parse --short HEAD > .git/commit"
+			sh "basename `git rev-parse --show-toplevel` > .git/image"
+            COMMIT_ID = readFile('.git/commit').trim()
+            SERVICE_NAME = readFile('.git/image')
+			def docker_image = "fractal-docker-registry.bintray.io/${SERVICE_NAME}"
 	}
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
 			def app = docker.build ("${docker_image}")
-			sh "git rev-parse --short HEAD > .git/commit"
-			sh "basename `git rev-parse --show-toplevel` > .git/image"
-            COMMIT_ID = readFile('.git/commit').trim()
-            SERVICE_NAME = readFile('.git/image')
 			app.push "$COMMIT_ID"
 			}
 		}

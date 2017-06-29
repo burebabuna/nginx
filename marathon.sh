@@ -4,15 +4,16 @@ for i in "$@"
 do
 case $i in 
     -i=*|--image=*)
-      IMAGE="${i#*=}"
-      ;;
+    IMAGE="${i#*=}"
+    ;;
     -s=*|--service_name=*)
-      SERVICE_NAME="${i#*=}"
-      ;;
-*)
+    SERVICE_NAME="${i#*=}"
+    ;;
+    *)
     ;;
 esac
 done
+
 cat > marathon.json <<EOF
 {
   "id": "/${SERVICE_NAME}",
@@ -37,4 +38,5 @@ cat > marathon.json <<EOF
     "HAPROXY_0_VHOST":"${SERVICE_NAME}.fos"
   }
 }
+
 EOF

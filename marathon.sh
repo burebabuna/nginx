@@ -1,11 +1,27 @@
 #!/bin/bash
+
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -SERVICE_NAME)
+        service_name=$2
+        shift
+        ;;
+    -COMMIT_ID)
+        commit_id=$2
+        shift
+        ;;
+    *)
+        exit 1
+    esac
+    shift
+done
 cat > marathon.json <<EOF
 {
-  "id": "/${1}",
+  "id": "/$service_name",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-fos-prod.bintray.io/${1}:${2}",
+      "image": "fractal-docker-fos-prod.bintray.io/$service_name:$commit_id",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
@@ -20,8 +36,8 @@ cat > marathon.json <<EOF
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${1}.fos"
+    "HAPROXY_0_VHOST":"$service_name.fos"
   }
 }
 EOF
-cat marathon.json
+echo "This image is tagged as $service_name:$commit_id"

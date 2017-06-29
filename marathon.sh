@@ -6,8 +6,11 @@ case $i in
     -i=*|--image=*)
   IMAGE="${i#*=}"
   ;;
-    -c=*|--commit=*)
-  COMMIT="${i#*=}"
+  -s=*|--service_name=*)
+  SERVICE_NAME="${i#*=}"
+  ;;
+    -g=*|--group=*)
+  GROUP="${i#*=}"
   ;;
     *)
   ;;
@@ -16,11 +19,11 @@ done
 
 cat > marathon.json <<EOF
 {
-  "id": "/${IMAGE}",
+  "id": "/${SERVICE_NAME}",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-fos-prod.bintray.io/${IMAGE}:${COMMIT}",
+      "image": "fractal-docker-fos-prod.bintray.io/${SERVICE_NAME}:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
@@ -35,8 +38,8 @@ cat > marathon.json <<EOF
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${IMAGE}.fos"
+    "HAPROXY_0_VHOST":"${SERVICE_NAME}.fos"
   }
 }
 EOF
-echo "This image is tagged as ${IMAGE}:${COMMIT}"
+echo "This image is tagged as ${SERVICE_NAME}:${IMAGE}"

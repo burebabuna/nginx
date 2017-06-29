@@ -30,7 +30,7 @@ node ( 'graphstack' ) {
 			sh "basename `git rev-parse --show-toplevel` > .git/image"
             COMMIT_ID = readFile('.git/commit').trim()
             SERVICE_NAME = readFile('.git/image')
-			app.push "$COMMIT"
+			app.push "$COMMIT_ID"
 			}
 		}
 

@@ -2,15 +2,15 @@
 
 for i in "$@"
 do
-case $i in 
+case $i in
     -i=*|--image=*)
-    IMAGE="${i#*=}"
-    ;;
-    -s=*|--service_name=*)
-    SERVICE_NAME="${i#*=}"
-    ;;
+  IMAGE="${i#*=}"
+  ;;
+  -s=*|--service_name=*)
+  SERVICE_NAME="${i#*=}"
+  ;;
     *)
-    ;;
+  ;;
 esac
 done
 

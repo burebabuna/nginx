@@ -1,0 +1,7 @@
+# Add files here that docker cli doesn't need to send the context to the docker daemon. This increases the build time. 
+marathon.json
+Jenkinsfile.groovy
+.gitignore
+.git
+Dockerfile
+.dockerignore

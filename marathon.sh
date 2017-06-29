@@ -1,11 +1,11 @@
 #!/bin/bash
 cat > marathon.json <<EOF
 {
-  "id": "/$1",
+  "id": "/${1}",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-fos-prod.bintray.io/$1:$2",
+      "image": "fractal-docker-fos-prod.bintray.io/${1}:${2}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
@@ -20,7 +20,8 @@ cat > marathon.json <<EOF
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"$1.fos"
+    "HAPROXY_0_VHOST":"${1}.fos"
   }
 }
 EOF
+cat marathon.json

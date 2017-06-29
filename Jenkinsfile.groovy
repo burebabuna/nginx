@@ -14,7 +14,7 @@ def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
 
 
-node ( graphstack ) {
+node ( 'graphstack' ) {
 
 	// Wipe the workspace
 	deleteDir()

@@ -3,17 +3,14 @@
 while [[ $# -gt 0 ]]; do
     case "$1" in
     -SERVICE_NAME)
-        service_name=$2
-        shift
+        service_name=$1
         ;;
     -COMMIT_ID)
         commit_id=$2
-        shift
         ;;
     *)
         exit 1
     esac
-    shift
 done
 cat > marathon.json <<EOF
 {

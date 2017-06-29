@@ -26,17 +26,17 @@ node ( 'graphstack' ) {
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
 			def app = docker.build ("${docker_image}")
-			sh "git rev-parse --short HEAD > .git/commit_id"
-			sh "basename `git rev-parse --show-toplevel` > .git/service_name"
-            COMMIT_ID = readFile('.git/commit_id').trim()
-            SERVICE_NAME = readFile('.git/service_name')
-			app.push "$COMMIT_ID"
+			sh "git rev-parse --short HEAD > .git/commit"
+			sh "basename `git rev-parse --show-toplevel` > .git/image"
+            COMMIT = readFile('.git/commit').trim()
+            IMAGE = readFile('.git/image')
+			app.push "$COMMIT"
 			}
 		}
 
 	stage ('Marathon-Deployment') {
 		sh "chmod +x marathon.sh"
-		sh "./marathon.sh -SERVICE_NAME=$SERVICE_NAME -COMMIT_ID=$COMMIT_ID"
+		sh "./marathon.sh -i=$IMAGE -c=$COMMIT"
 		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json"
 	}
 }

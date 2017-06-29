@@ -1,19 +1,25 @@
 #!/bin/bash
+
 for i in "$@"
 do
 case $i in 
     -i=*|--image=*)
-  IMAGE="${i#*=}"
-  ;;
+      IMAGE="${i#*=}"
+      ;;
+    -s=*|--service_name=*)
+      SERVICE_NAME="${i#*=}"
+      ;;
+*)
+    ;;
 esac
 done
 cat > marathon.json <<EOF
 {
-  "id": "nginx-version-test",
+  "id": "/${SERVICE_NAME}",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-registry.bintray.io/nginx-version-test:${IMAGE}",
+      "image": "fractal-docker-fos-prod.bintray.io/${SERVICE_NAME}:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
@@ -28,7 +34,7 @@ cat > marathon.json <<EOF
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"nginx-version-test.fos"
+    "HAPROXY_0_VHOST":"${SERVICE_NAME}.fos"
   }
 }
 EOF

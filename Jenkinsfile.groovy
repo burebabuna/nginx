@@ -23,15 +23,17 @@ node ( jenkins_slave ) {
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
 			def app = docker.build ("${docker_image}")
-			sh "git rev-parse --short HEAD > .git/commit-id"
-            COMMIT_ID = readFile('.git/commit-id').trim()
+			sh "git rev-parse --short HEAD > .git/commit_id"
+			sh "basename `git rev-parse --show-toplevel` > .git/service_name"
+            COMMIT_ID = readFile('.git/commit_id').trim()
+            SERVICE_NAME = readFile('.git/service_name')
 			app.push "$COMMIT_ID"
 			}
 		}
 
 	stage ('Marathon-Deployment') {
 		sh "chmod +x ./marathon.sh"
-		sh "./marathon.sh -i=$COMMIT_ID"
+		sh "./marathon.sh -i=$COMMIT_ID -s=$SERVICE_NAME"
 		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json"
 	}
 }

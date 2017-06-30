@@ -23,11 +23,11 @@ node ( 'mesos' ) {
 			sh "basename `git rev-parse --show-toplevel` > .git/image"
             COMMIT_ID = readFile('.git/commit').trim()
             SERVICE_NAME = readFile('.git/image')
-			docker_image = "fractal-docker-registry.bintray.io/${SERVICE_NAME}"
 	}
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
+			def docker_image = "fractal-docker-registry.bintray.io/${SERVICE_NAME}"
 			def app = docker.build "${docker_image}"
 			app.push "$COMMIT_ID"
 			}

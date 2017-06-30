@@ -1,19 +1,15 @@
 #!/bin/bash
 
-for i in "$@"
+while [[ $# -gt 0 ]];
 do
-case $i in
-    -i=*|--image=*)
-    IMAGE="${i#*=}"
-    ;;
-    -s=*|--service_name=*)
-    SERVICE_NAME="${i#*=}"
-    ;;
-    -r=*|--docker_registry=*)
-    DOCKER_REGISTRY="${i#*=}"
-    ;;
-    *)
-    ;;
+  opt ="$1"
+  shift;
+case "$opt" in
+    "-i" ) IMAGE="$1"; shift ;;
+    "-s" ) SERVICE_NAME="$1"; shift ;;
+    "-r" ) DOCKER_REGISTRY="$1"; shift ;;
+    *    ) echo "ERROR": Invalid option: \""$opt"\"" >&2
+           exit 1 ;;
 esac
 done
 

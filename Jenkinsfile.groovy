@@ -36,7 +36,7 @@ node ( 'mesos' ) {
 		}
 
 	stage ('Marathon-Deployment') {
-		sh "./marathon.sh -i=$COMMIT_ID -s=$SERVICE_NAME -r="${docker_registry}""
+		sh "./marathon.sh -i=$COMMIT_ID -s=$SERVICE_NAME -r=${docker_registry}"
 		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json'"
 	}
 }

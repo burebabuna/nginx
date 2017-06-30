@@ -31,10 +31,21 @@ cat > marathon.json <<EOF
     }
   },
   "instances":1,
-  "cpus": 0.1,
-  "mem": 64,
+  "cpus": 1,
+  "mem": 1024,
   "uris": [
     "file:///mnt/jenkins/docker.tar.gz"
+  ],
+  "healthChecks": [
+    {
+      "gracePeriodSeconds": 120,
+      "intervalSeconds": 30,
+      "maxConsecutiveFailures": 3,
+      "path": "/",
+      "portIndex": 0,
+      "protocol": "HTTP",
+      "timeoutSeconds": 5
+    }
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
@@ -44,7 +55,3 @@ cat > marathon.json <<EOF
 
 EOF
 cat marathon.json
-PWD
-ls -ltra
-
-echo "This image is tagged as ${SERVICE_NAME}:${IMAGE}"

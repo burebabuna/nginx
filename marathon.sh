@@ -23,7 +23,7 @@ cat > marathon.json <<EOF
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-fos-prod.bintray.io/${SERVICE_NAME}:${IMAGE}",
+      "image": "fractal-docker-registry.bintray.io/${SERVICE_NAME}:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}

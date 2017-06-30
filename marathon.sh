@@ -9,8 +9,8 @@ case $i in
     -s=*|--service_name=*)
     SERVICE_NAME="${i#*=}"
     ;;
-    -g=*|--group=*)
-    GROUP="${i#*=}"
+    -r=*|--registry=*)
+    REGISTRY="${i#*=}"
     ;;
     *)
     ;;
@@ -23,7 +23,7 @@ cat > marathon.json <<EOF
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "fractal-docker-registry.bintray.io/${SERVICE_NAME}:${IMAGE}",
+      "image": "${REGISTRY}/${SERVICE_NAME}:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}

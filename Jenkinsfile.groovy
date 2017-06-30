@@ -12,7 +12,7 @@ def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
 
 
-node ( 'graphstack' ) {
+node ( 'mesos' ) {
 
 	// Wipe the workspace
 	deleteDir()
@@ -28,7 +28,7 @@ node ( 'graphstack' ) {
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			def app = docker.build "${docker_image}"
+			def app = docker.build("${docker_image}")
 			app.push "$COMMIT_ID"
 			}
 		}

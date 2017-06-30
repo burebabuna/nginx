@@ -10,7 +10,7 @@ def jenkins_slave = "mesos"
 def marathon_url = env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : env.MARATHON_URL
 def marathon_file_path = "marathon.json"
 def marathon_app_id = "nginx-version-test"
-
+def docker_registry = "fractal-docker-registry.bintray.io"
 
 node ( 'mesos' ) {
 
@@ -24,13 +24,13 @@ node ( 'mesos' ) {
 	stage ('Env Variable Capture') {
 		sh "git rev-parse --short HEAD > .git/commit"
 		sh "basename `git rev-parse --show-toplevel` > .git/image"
-        def COMMIT_ID = readFile('.git/commit').trim()
-        def SERVICE_NAME = readFile('.git/image')
+        COMMIT_ID = readFile('.git/commit').trim()
+        SERVICE_NAME = readFile('.git/image')
 	}
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			docker.build("fractal-docker-registry.bintray.io/${SERVICE_NAME}:${COMMIT_ID}").push()
+			docker.build("${docker_registry}/${SERVICE_NAME}:${COMMIT_ID}").push()
 			}
 		}
 

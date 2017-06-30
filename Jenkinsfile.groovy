@@ -26,6 +26,7 @@ node ( 'mesos' ) {
 		sh "basename `git rev-parse --show-toplevel` > .git/image"
         COMMIT_ID = readFile('.git/commit').trim()
         SERVICE_NAME = readFile('.git/image')
+        REGISTRY = ${docker_registry}
 	}
 
 	stage ('Docker Build and Push') {
@@ -36,7 +37,7 @@ node ( 'mesos' ) {
 		}
 
 	stage ('Marathon-Deployment') {
-		sh "./marathon.sh -i=$COMMIT_ID -s=$SERVICE_NAME -r=$docker_registry"
+		sh "./marathon.sh -i=$COMMIT_ID -s=$SERVICE_NAME -r=$REGISTRY"
 		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json'"
 	}
 }

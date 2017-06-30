@@ -30,7 +30,7 @@ node ( 'mesos' ) {
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			app = docker.build("${docker_registry}/${SERVICE_NAME}")
+			app = docker.build("fractal-docker-registry.bintray.io/nginx-version-test")
 			app.push("${COMMIT_ID}")
 			}
 		}

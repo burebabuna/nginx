@@ -4,10 +4,10 @@ while [[ $# -gt 0 ]];
 do
   opt ="$1"
   shift;
-case "$opt" in
-    "-i" ) IMAGE="$1"; shift ;;
-    "-s" ) SERVICE_NAME="$1"; shift ;;
-    "-r" ) DOCKER_REGISTRY="$1"; shift ;;
+  case "$opt" in
+    "-i" ) IMAGE="$1"; shift;;
+    "-s" ) SERVICE_NAME="$1"; shift;;
+    "-r" ) DOCKER_REGISTRY="$1"; shift;;
     *    ) echo "ERROR": Invalid option: \""$opt"\"" >&2
            exit 1 ;;
 esac

@@ -27,8 +27,7 @@ node ( 'mesos' ) {
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			def app = docker.build("fractal-docker-registry.bintray.io/${SERVICE_NAME}:${COMMIT_ID}")
-			app.push ()
+			docker.build("fractal-docker-registry.bintray.io/${SERVICE_NAME}:${COMMIT_ID}").push()
 			}
 		}
 

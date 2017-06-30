@@ -12,8 +12,6 @@ case $i in
     -r=*|--docker_registry=*)
     DOCKER_REGISTRY="${i#*=}"
     ;;
-    *)
-    ;;
 esac
 done
 

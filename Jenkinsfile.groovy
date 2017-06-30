@@ -30,7 +30,8 @@ node ( 'mesos' ) {
 
 	stage ('Docker Build and Push') {
 		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			docker.build("${docker_registry}/${SERVICE_NAME}:${COMMIT_ID}").push()
+			app = docker.build("${docker_registry}/${SERVICE_NAME}")
+			app.push("${COMMIT_ID}")
 			}
 		}
 

@@ -19,10 +19,13 @@ node ( 'mesos' ) {
 
 	stage ('Checkout') {
 		git url: scm_url, branch: scm_branch, credentialsId: scm_credentials
-			sh "git rev-parse --short HEAD > .git/commit"
-			sh "basename `git rev-parse --show-toplevel` > .git/image"
-            COMMIT_ID = readFile('.git/commit').trim()
-            SERVICE_NAME = readFile('.git/image')
+	}
+
+	stage ('Env Variable Capture') {
+		sh "git rev-parse --short HEAD > .git/commit"
+		sh "basename `git rev-parse --show-toplevel` > .git/image"
+        def COMMIT_ID = readFile('.git/commit').trim()
+        def SERVICE_NAME = readFile('.git/image')
 	}
 
 	stage ('Docker Build and Push') {

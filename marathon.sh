@@ -1,17 +1,20 @@
 #!/bin/bash
-
-while [[ $# -gt 0 ]];
-do
-  opt ="$1"
-  shift;
-  case "$opt" in
-    "-i" ) IMAGE="$1"; shift;;
-    "-s" ) SERVICE_NAME="$1"; shift;;
-    "-r" ) DOCKER_REGISTRY="$1"; shift;;
-    *    ) echo "ERROR": Invalid option: \""$opt"\"" >&2
-           exit 1 ;;
-esac
+while getopts ":i:s:r:" opt; do
+  case "${opt}" in
+    i) 
+      IMAGE="${OPTARG}"
+      echo $IMAGE;;
+    s)
+      SERVICE_NAME="${OPTARG}"
+      echo $SERVICE_NAME;;
+    r)
+      DOCKER_REGISTRY="${OPTARG}"
+      echo $DOCKER_REGISTRY;;
+    *) 
+      echo "ERROR": Invalid option >&2;;
+  esac
 done
+shift $((OPTIND-1))
 
 cat > marathon.json <<EOF
 {

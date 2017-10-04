@@ -1,44 +1,61 @@
 #!/usr/bin/env groovy
-def scm_url = "git@bitbucket.org:fractalindustries/nginx-version-test"
-def scm_branch = "master"
-def docker_registry_url = "https://fractal-docker-registry.bintray.io"
 
-def scm_credentials = "dcos-jenkins"
-def docker_registry_credentials = "dcos-jenkins-bintray"
+// Define source code configurations
 
-def jenkins_slave = "mesos"
-def marathon_url = env.MARATHON_URL == null ? 'http://marathon.mesos:8080' : env.MARATHON_URL
-def marathon_file_path = "marathon.json"
-def marathon_app_id = "nginx-version-test"
-def docker_registry = "fractal-docker-registry.bintray.io"
+def scm_repository = 'git@bitbucket.org:fractalindustries/nginx-version-test'
+def scm_branch = 'master'
+def scm_credentials = 'dcos-jenkins'
+
+// Define docker related configuration
+
+def docker_registry_url = "https://docker.fractalindustries.com"
+def docker_registry_credentials = "artifactory"
+def docker_image = "docker.fractalindustries.com/nginx-version-test"
+def dockerfile_path = "Dockerfile"
+
+// Define marathon related configurations
+
+def marathon_url = 'http://marathon.mesos'
+def marathon_path = "marathon.json"
+def configJson = 'marathon.json'
+
+// Application
+
+def app_name = 'nginx-version-test'
+
+// Pipeline steps
 
 node ( 'mesos' ) {
 
-	// Wipe the workspace
-	deleteDir()
-
-	stage ('Checkout') {
-		git url: scm_url, branch: scm_branch, credentialsId: scm_credentials
-	}
-
-	stage ('Env Variable Capture') {
-		sh "git rev-parse --short HEAD > .git/commit"
-		sh "basename `git rev-parse --show-toplevel` > .git/image"
-        COMMIT_ID = readFile('.git/commit').trim()
-        SERVICE_NAME = readFile('.git/image')
-	}
-
-	stage ('Docker Build and Push') {
-		withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
-			app = docker.build("${docker_registry}/${marathon_app_id}")
-			app.push("${COMMIT_ID}")
-			}
+		// Wipe the workspace
+		deleteDir()
+		stage ('Checkout') {
+			git url: scm_repository, branch: scm_branch, credentialsId: scm_credentials
 		}
 
-	stage ('Marathon-Deployment') {
-		sh "./marathon.sh -i $COMMIT_ID -s $SERVICE_NAME -r """${docker_registry}""""
-		sh "curl -X PUT ${marathon_url}/v2/apps/${marathon_app_id} -d @${marathon_file_path} -H 'Content-type: application/json'"
-	}
+		stage ('Env Variable Capture') {
+			sh "git rev-parse --short HEAD > .git/commit"
+			sh "basename `git rev-parse --show-toplevel` > .git/image"
+	        COMMIT_ID = readFile('.git/commit').trim()
+	        SERVICE_NAME = readFile('.git/image')
+		}
+
+		stage ('Docker Build') {
+			withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
+				app = docker.build(docker_image)
+				}
+		}
+
+		stage ('Docker Tag') {
+			withDockerRegistry([credentialsId: docker_registry_credentials, url: docker_registry_url]) {
+				app.push("${COMMIT_ID}")
+				app.push("latest")
+				}
+		}
+
+		stage ("Marathon-Deployment") {
+		sh "./marathon.sh -i $COMMIT_ID"
+		sh "curl -X DELETE http://marathon.mesos:8080/v2/apps/$app_name -H 'Content-type: application/json' && sleep 30"
+		sh "curl -X PUT http://marathon.mesos:8080/v2/apps/$app_name -d @${configJson} -H 'Content-type: application/json'"
+		}
 }
-
-

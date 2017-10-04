@@ -1,16 +1,13 @@
 #!/bin/bash
-while getopts ":i:s:r:" opt; do
+while getopts ":i:s:" opt; do
   case "${opt}" in
-    i) 
+    i)
       IMAGE="${OPTARG}"
       echo $IMAGE;;
     s)
       SERVICE_NAME="${OPTARG}"
       echo $SERVICE_NAME;;
-    r)
-      DOCKER_REGISTRY="${OPTARG}"
-      echo $DOCKER_REGISTRY;;
-    *) 
+    *)
       echo "ERROR": Invalid option >&2;;
   esac
 done
@@ -18,11 +15,11 @@ shift $((OPTIND-1))
 
 cat > marathon.json <<EOF
 {
-  "id": "/${SERVICE_NAME}",
+  "id": "/nginx-version-test",
   "container": {
     "type": "DOCKER",
     "docker": {
-      "image": "${DOCKER_REGISTRY}/${SERVICE_NAME}:${IMAGE}",
+      "image": "docker.fractalindustries.com/nginx-version-test:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
         { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
@@ -48,7 +45,7 @@ cat > marathon.json <<EOF
   ],
   "labels": {
     "HAPROXY_GROUP":"external",
-    "HAPROXY_0_VHOST":"${SERVICE_NAME}.fos"
+    "HAPROXY_0_VHOST":"nginx-version-test.fos"
   }
 }
 

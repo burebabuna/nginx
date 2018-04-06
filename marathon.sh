@@ -22,7 +22,16 @@ cat > marathon.json <<EOF
       "image": "docker.fractalindustries.com/nginx-version-test:${IMAGE}",
       "network": "BRIDGE",
       "portMappings": [
-        { "hostPort": 0, "containerPort": 80, "servicePort": 0, "protocol": "tcp"}
+        { 
+          "hostPort": 0, 
+          "containerPort": 80, 
+          "servicePort": 0, 
+          "protocol": "tcp",
+          "labels": {
+            "VIP_0": "/nginx-version-test:80"
+          },
+          "name":"nginx-l4lb"
+        }
       ]
     }
   },

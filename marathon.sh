@@ -43,6 +43,14 @@ cat > marathon.json <<EOF
       "timeoutSeconds": 5
     }
   ],
+  "upgradeStrategy": {
+    "minimumHealthCapacity": 1,
+    "maximumOverCapacity": 1
+  },
+  "unreachableStrategy": {
+    "inactiveAfterSeconds": 300,
+    "expungeAfterSeconds": 600
+  },
   "labels": {
     "HAPROXY_GROUP":"external",
     "HAPROXY_0_VHOST":"nginx-version-test.fos"

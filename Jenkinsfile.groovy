@@ -55,7 +55,7 @@ node ( 'mesos' ) {
 
 		stage ("Marathon-Deployment") {
 		sh "./marathon.sh -i $COMMIT_ID"
-		sh "curl -X DELETE http://marathon.mesos:8080/v2/apps/$app_name -H 'Content-type: application/json' && sleep 30"
+		// sh "curl -X DELETE http://marathon.mesos:8080/v2/apps/$app_name -H 'Content-type: application/json' && sleep 30"
 		sh "curl -X PUT http://marathon.mesos:8080/v2/apps/$app_name -d @${configJson} -H 'Content-type: application/json'"
 		//def health_check = shell.parse("sleep 120 && curl -X GET http://marathon.mesos:8080/v2/apps/$APP_NAME -H 'Content-type: application/json'")
 		//print health_check

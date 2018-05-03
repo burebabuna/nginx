@@ -60,7 +60,9 @@ cat > marathon.json <<EOF
     "inactiveAfterSeconds": 300,
     "expungeAfterSeconds": 600
   },
+  "acceptedResourceRoles": ["slave_public"],
   "labels": {
+    "Marathon_Name":"nginx-version-test-marathon-label",
     "HAPROXY_GROUP":"external",
     "HAPROXY_0_VHOST":"nginx-version-test.fos"
   }
